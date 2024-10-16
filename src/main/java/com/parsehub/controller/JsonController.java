@@ -7,7 +7,7 @@ import com.parsehub.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RestController  // Use @RestController instead of @Controller to return response bodies directly
+@RestController
 @RequestMapping("/api/v1/json")
 public class JsonController {
 
@@ -23,38 +23,37 @@ public class JsonController {
         // log the request
         System.out.println("Request received: " + json);
 
-        return jsonService.validateJson(json);  // Delegate to the service
+        return jsonService.validateJson(json);
     }
 
     @PostMapping("/format/{format}")
     public String formatJson(@RequestBody String json, @PathVariable String format) {
-        // Map the format String to the Format enum
-        Format formatEnum = Format.valueOf(format.toUpperCase());  // Convert the string to an enum
-        return jsonService.formatJson(json, formatEnum);  // Delegate to the service
+        Format formatEnum = Format.valueOf(format.toUpperCase());
+        return jsonService.formatJson(json, formatEnum);
     }
 
     @PostMapping("/minify")
     public String minifyJson(@RequestBody String json) {
-        return jsonService.minifyJson(json);  // Delegate to the service
+        return jsonService.minifyJson(json);
     }
 
     @PostMapping("/convert/xml")
     public String convertJsonToXml(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.XML);  // Delegate to the service (assuming Format.XML exists)
+        return jsonService.convertJson(json, ConversionType.XML);
     }
 
     @PostMapping("/convert/yaml")
     public String convertJsonToYaml(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.YAML);  // Delegate to the service (assuming Format.YAML exists)
+        return jsonService.convertJson(json, ConversionType.YAML);
     }
 
     @PostMapping("/convert/csv")
     public String convertJsonToCsv(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.CSV);  // Delegate to the service (assuming Format.CSV exists)
+        return jsonService.convertJson(json, ConversionType.CSV);
     }
 
     @PostMapping("/sort")
     public String sortJson(@RequestBody String json) {
-        return jsonService.sortJson(json);  // Delegate to the service
+        return jsonService.sortJson(json);
     }
 }

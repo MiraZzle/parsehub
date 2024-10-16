@@ -15,8 +15,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-
-
 import java.io.IOException;
 import java.util.TreeMap;
 
@@ -42,8 +40,6 @@ public class JsonService {
         return result;
     }
 
-    // Method to format JSON
-    // Method to format JSON with different styles
     public String formatJson(String json, Format format) {
         try {
             // Parse the JSON into a JsonNode
@@ -65,23 +61,17 @@ public class JsonService {
                 default:
                     writer = objectMapper.writer();
             }
-            // Return formatted JSON
             return writer.writeValueAsString(jsonNode);
 
         } catch (JsonProcessingException e) {
-            // Handle exception
             return "Invalid JSON format: " + e.getMessage();
         }
     }
 
-
-    // Method to minify JSON
     public String minifyJson(String json) {
         return formatJson(json, Format.COMPACT); // Reuse formatJson with a compact setting
     }
 
-    // Method to convert JSON to other formats (example: to YAML)
-    // Method to convert JSON to other formats (XML, YAML, CSV)
     public String convertJson(String json, ConversionType type) {
         try {
             JsonNode jsonNode = objectMapper.readTree(json);  // Parse JSON to JsonNode
@@ -102,10 +92,8 @@ public class JsonService {
 
     private String convertJsonToYaml(String json) {
         try {
-            // Parse the JSON into a JsonNode
             JsonNode jsonNode = objectMapper.readTree(json);
 
-            // Convert JSON to YAML
             return objectMapper.writeValueAsString(jsonNode);
         } catch (IOException e) {
             return "Invalid JSON format: " + e.getMessage();
@@ -117,7 +105,6 @@ public class JsonService {
         return xmlMapper.writeValueAsString(jsonNode);
     }
 
-    // Helper method to convert JSON to YAML
     private String convertJsonToYaml(JsonNode jsonNode) {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);  // Multi-line format
@@ -127,9 +114,8 @@ public class JsonService {
         return yaml.dump(object);  // Convert Java Object to YAML string
     }
 
-    // Helper method to convert JSON to CSV
     private String convertJsonToCsv(JsonNode jsonNode) throws JsonProcessingException {
-        // Ensure the JSON is an array of objects, which is suitable for CSV format
+        // Ensure the JSON is an array of objects - needed to convert to CSV
         if (!jsonNode.isArray()) {
             throw new IllegalArgumentException("JSON must be an array to convert to CSV");
         }
@@ -142,12 +128,9 @@ public class JsonService {
         firstElement.fieldNames().forEachRemaining(fieldName -> schemaBuilder.addColumn(fieldName));
 
         CsvSchema schema = schemaBuilder.build().withHeader();
-
-        // Write the array of JSON objects as CSV
         return csvMapper.writer(schema).writeValueAsString(jsonNode);
     }
 
-    // Method to sort JSON keys alphabetically
     public String sortJson(String json) {
         try {
             // Parse the JSON into a TreeMap to automatically sort the keys

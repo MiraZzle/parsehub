@@ -4,5 +4,6 @@ public enum Format {
     SPACE_2,
     SPACE_3,
     SPACE_4,
-    COMPACT
+    COMPACT,
+    PRETTY,
 }
