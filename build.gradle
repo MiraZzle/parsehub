@@ -7,7 +7,7 @@ plugins {
     id 'com.vaadin' version '24.4.13'
 }
 
-group = 'com.example'
+group = 'com'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -61,7 +61,7 @@ dependencyManagement {
 
 generateJava {
     schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]
-    packageName = 'com.example.parsehub.codegen'
+    packageName = 'com.parsehub.codegen'
     generateClient = true
 }
 

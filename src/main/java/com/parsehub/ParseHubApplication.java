@@ -1,4 +1,4 @@
-package com.example.parsehub;
+package com.parsehub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class ParseHubApplication {
     public static void main(String[] args) {
         SpringApplication.run(ParseHubApplication.class, args);
     }
-
 }
