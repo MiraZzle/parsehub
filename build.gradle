@@ -50,6 +50,22 @@ dependencies {
     testImplementation 'org.springframework.graphql:spring-graphql-test'
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Spring Boot and Jackson
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // Jackson for XML support
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.1'
+
+    // Jackson for CSV support
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.3'
+
+    // SnakeYAML for YAML conversion
+    implementation 'org.yaml:snakeyaml:1.29'
+
+    // Spring Boot Testing dependencies (optional)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 dependencyManagement {

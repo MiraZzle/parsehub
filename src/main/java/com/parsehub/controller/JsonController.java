@@ -13,7 +13,6 @@ public class JsonController {
 
     private final JsonService jsonService;
 
-    // Constructor-based dependency injection
     @Autowired
     public JsonController(JsonService jsonService) {
         this.jsonService = jsonService;
