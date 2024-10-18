@@ -8,5 +8,4 @@ public class ParseHubApplication {
     public static void main(String[] args) {
         SpringApplication.run(ParseHubApplication.class, args);
     }
-
 }
