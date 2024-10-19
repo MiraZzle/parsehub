@@ -19,10 +19,11 @@ public class ButtonsSection extends VerticalLayout {
         validateButton = new Button("Validate");
         formatButton = new Button("Format / Beautify");
         minifyButton = new Button("Minify");
+        convertButton = new Button("Convert Data");
 
         // Initialize ComboBox for indentation selection
         indentationComboBox = new ComboBox<>("Indentation");
-        indentationComboBox.setItems("2", "3", "4");
+        indentationComboBox.setItems("2", "4");
         indentationComboBox.setValue("2"); // Default value
 
         // Initialize ComboBox for conversion types
@@ -31,11 +32,11 @@ public class ButtonsSection extends VerticalLayout {
         conversionComboBox.setValue("JSON"); // Default to JSON
 
         // Initialize Convert button
-        convertButton = new Button("Convert Data");
 
         // Add everything to the layout
         add(validateButton, formatButton, minifyButton, indentationComboBox, conversionComboBox, convertButton);
         setSpacing(true);
+        setClassName("buttons-section"); // Optional styling class for ButtonsSection
     }
 
     public Button getValidateButton() {

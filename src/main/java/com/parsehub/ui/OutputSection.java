@@ -8,14 +8,14 @@ public class OutputSection extends VerticalLayout {
     private TextArea outputArea;
 
     public OutputSection() {
-        outputArea = new TextArea("Output");
+        setClassName("output-section"); // Set the CSS class
+
+        outputArea = new TextArea();
+        outputArea.setPlaceholder("Output will appear here...");
         outputArea.setWidthFull();
-        outputArea.setHeight("300px");
 
         add(outputArea);
         setSpacing(true);
-        setPadding(true);
-        setSizeFull();
     }
 
     public void setOutputValue(String value) {

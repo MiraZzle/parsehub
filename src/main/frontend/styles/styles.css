@@ -1,21 +1,85 @@
-/* Global style for all text areas */
+/* Global layout settings */
+body {
+    background-color: #0d1116;
+    color: #c9d1d9;
+}
+
+/* Style for the TextArea components */
 vaadin-text-area {
     width: 100%;
-    height: 150px;
-    border: 2px solid #2c3e50;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #ecf0f1;
-    color: #2c3e50;
+    height: calc(100% - 60px); /* Matches the React example's textarea height */
+    resize: none;
+    font-family: monospace;
+    background-color: #0d1116;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    padding: 0;
 }
 
-/* Styling for the internal text input inside the text area */
 vaadin-text-area::part(input-field) {
-    background-color: red;
-    color: #2c3e50;
-    padding: 10px;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
+    background-color: #0d1116;
+    border: none;
+    font-size: 14px;
 }
 
+vaadin-text-area:focus::part(input-field) {
+    outline: none;
+    border: 2px solid #58a6ff; /* Blue focus ring like in the example */
+}
+
+/* Layout for the input and output sections */
+.input-section, .output-section {
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+/* Button styling */
+vaadin-button {
+    width: 100%;
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #3e444c;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.copy-button {
+    width: auto;
+}
+
+vaadin-button:hover {
+    background-color: #30363d;
+}
+
+/* ComboBox styling */
+vaadin-combo-box {
+    width: 100%;
+    background-color: #21262d;
+    color: #c9d1d9;
+    border-radius: 8px;
+}
+
+/* Indentation selection and radio buttons */
+vaadin-radio-group {
+    display: flex;
+    justify-content: flex-start;
+}
+
+vaadin-radio-button {
+    color: #c9d1d9;
+}
+
+.buttons-section {
+    width: 40%;
+}
+
+.input-controls-section {
+    width: 100%;
+    background-color: #0d1116;
+    border: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+}

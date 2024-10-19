@@ -15,6 +15,7 @@ import com.parsehub.util.ConversionType;
 
 @SpringComponent
 @Route("")
+@CssImport("./styles/styles.css")
 public class MainView extends VerticalLayout {
 
     private final JsonService jsonService;
@@ -35,10 +36,8 @@ public class MainView extends VerticalLayout {
         buttonsSection = new ButtonsSection();
         outputSection = new OutputSection();
 
-        HorizontalLayout mainLayout = new HorizontalLayout();
-        mainLayout.setWidthFull();
-        mainLayout.add(inputSection, buttonsSection, outputSection);
-        mainLayout.setFlexGrow(1, inputSection, outputSection);
+        HorizontalLayout mainLayout = new HorizontalLayout(inputSection, buttonsSection, outputSection);
+        mainLayout.setSizeFull();
 
         add(mainLayout);
         setSizeFull();
