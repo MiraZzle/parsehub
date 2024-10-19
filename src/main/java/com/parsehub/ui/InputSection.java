@@ -6,9 +6,10 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.dependency.CssImport;
 
+@CssImport("./styles/styles.css")
 public class InputSection extends VerticalLayout {
-
     private TextArea inputArea;
     private RadioButtonGroup<String> formatSelector;
 

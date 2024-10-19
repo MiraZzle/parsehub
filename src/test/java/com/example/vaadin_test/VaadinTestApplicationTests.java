@@ -1,10 +1,10 @@
-package com.parsehub;
+package com.example.vaadin_test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ParseHubApplicationTests {
+class VaadinTestApplicationTests {
 
     @Test
     void contextLoads() {
