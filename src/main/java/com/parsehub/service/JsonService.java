@@ -72,7 +72,7 @@ public class JsonService {
         return formatJson(json, Format.COMPACT); // Reuse formatJson with a compact setting
     }
 
-    public String convertJson(String json, ConversionType type) {
+    public String convertData(String json, ConversionType type) {
         try {
             JsonNode jsonNode = objectMapper.readTree(json);  // Parse JSON to JsonNode
             switch (type) {

@@ -40,17 +40,17 @@ public class JsonController {
 
     @PostMapping("/convert/xml")
     public String convertJsonToXml(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.XML);
+        return jsonService.convertData(json, ConversionType.XML);
     }
 
     @PostMapping("/convert/yaml")
     public String convertJsonToYaml(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.YAML);
+        return jsonService.convertData(json, ConversionType.YAML);
     }
 
     @PostMapping("/convert/csv")
     public String convertJsonToCsv(@RequestBody String json) {
-        return jsonService.convertJson(json, ConversionType.CSV);
+        return jsonService.convertData(json, ConversionType.CSV);
     }
 
     @PostMapping("/sort")

@@ -1,5 +1,6 @@
 package com.parsehub.service;
 
+import com.parsehub.util.ConversionType;
 import com.parsehub.util.ValidationResult;
 import com.parsehub.util.Format;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,28 @@ public class YamlService {
     // Minify YAML (reuse the compact format)
     public String minifyYaml(String yaml) {
         return formatYaml(yaml, Format.COMPACT);
+    }
+
+
+    public String convertData(String yaml, ConversionType targetType) {
+        try {
+            if (targetType == ConversionType.YAML) {
+                return yaml; // If the target is XML, no conversion needed
+            }
+
+            switch (targetType) {
+                case JSON:
+                    return convertYamlToJson(yaml);
+                case XML:
+                    return convertYamlToXml(yaml);
+                case CSV:
+                    return convertYamlToCsv(yaml);
+                default:
+                    return yaml;
+            }
+        } catch (Exception e) {
+            return "Invalid XML format: " + e.getMessage();
+        }
     }
 
     // Convert YAML to JSON (using manual conversion)

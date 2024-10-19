@@ -2,117 +2,138 @@ package com.parsehub.ui;
 
 import com.parsehub.service.JsonService;
 import com.parsehub.service.XmlService;
+import com.parsehub.service.YamlService;
+import com.parsehub.util.ValidationResult;
 import com.parsehub.util.Format;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.parsehub.util.ConversionType;
 
-@Component
-@Route("") // Vaadin route
+@SpringComponent
+@Route("")
 public class MainView extends VerticalLayout {
 
     private final JsonService jsonService;
     private final XmlService xmlService;
+    private final YamlService yamlService;
 
-    // Injecting services via constructor
+    private InputSection inputSection;
+    private ButtonsSection buttonsSection;
+    private OutputSection outputSection;
+
     @Autowired
-    public MainView(JsonService jsonService, XmlService xmlService) {
+    public MainView(JsonService jsonService, XmlService xmlService, YamlService yamlService) {
         this.jsonService = jsonService;
         this.xmlService = xmlService;
+        this.yamlService = yamlService;
 
-        // Input TextArea
-        TextArea inputArea = new TextArea("Input");
-        inputArea.setPlaceholder("Enter JSON or XML here...");
-        inputArea.setWidthFull();
-        inputArea.setHeight("300px");
+        inputSection = new InputSection();
+        buttonsSection = new ButtonsSection();
+        outputSection = new OutputSection();
 
-        // Output TextArea
-        TextArea outputArea = new TextArea("Output");
-        outputArea.setPlaceholder("Output will be shown here...");
-        outputArea.setWidthFull();
-        outputArea.setHeight("300px");
+        HorizontalLayout mainLayout = new HorizontalLayout();
+        mainLayout.setWidthFull();
+        mainLayout.add(inputSection, buttonsSection, outputSection);
+        mainLayout.setFlexGrow(1, inputSection, outputSection);
 
-        // Dropdown to select format (JSON/XML)
-        ComboBox<String> formatSelect = new ComboBox<>("Select Format");
-        formatSelect.setItems("JSON", "XML");
-        formatSelect.setValue("JSON"); // Default selection
+        add(mainLayout);
+        setSizeFull();
 
-        // Dropdown for indentation level
-        Select<Integer> indentSelect = new Select<>();
-        indentSelect.setItems(2, 4);
-        indentSelect.setLabel("Indentation");
-        indentSelect.setValue(2); // Default value
-
-        // Validate button
-        Button validateButton = new Button("Validate", event -> {
-            String input = inputArea.getValue();
-            String format = formatSelect.getValue();
-            String validationResult = validateData(input, format);
-            outputArea.setValue(validationResult);
-        });
-
-        // Format/Beautify button
-        Button formatButton = new Button("Format / Beautify", event -> {
-            String input = inputArea.getValue();
-            String format = formatSelect.getValue();
-            int indent = indentSelect.getValue();
-            String formattedData = formatData(input, format, indent);
-            inputArea.setValue(formattedData); // Update input with formatted data
-            outputArea.setValue(formattedData); // Show formatted data in output
-        });
-
-        // Minify button
-        Button minifyButton = new Button("Minify", event -> {
-            String input = inputArea.getValue();
-            String format = formatSelect.getValue();
-            String minifiedData = minifyData(input, format);
-            inputArea.setValue(minifiedData); // Update input with minified data
-            outputArea.setValue(minifiedData); // Show minified data in output
-        });
-
-        // Horizontal layout for buttons
-        HorizontalLayout buttonLayout = new HorizontalLayout(validateButton, formatButton, minifyButton);
-
-        // Add components to the layout
-        add(formatSelect, inputArea, buttonLayout, outputArea, indentSelect);
+        // Wire button events
+        buttonsSection.getValidateButton().addClickListener(event -> validateData());
+        buttonsSection.getFormatButton().addClickListener(event -> formatData());
+        buttonsSection.getMinifyButton().addClickListener(event -> minifyData());
+        buttonsSection.getConvertButton().addClickListener(event -> convertData());
     }
 
-    // Validate JSON or XML using the appropriate service
-    private String validateData(String data, String format) {
-        if ("JSON".equals(format)) {
-            var validationResult = jsonService.validateJson(data);
-            return validationResult.isValid() ? "Valid JSON" : "Invalid JSON: " + validationResult.getErrorMessages();
-        } else if ("XML".equals(format)) {
-            var validationResult = xmlService.validateXml(data);
-            return validationResult.isValid() ? "Valid XML" : "Invalid XML: " + validationResult.getErrorMessages();
+    private void validateData() {
+        String input = inputSection.getInputValue();
+        String format = inputSection.getSelectedFormat();
+        ValidationResult result;
+
+        if ("JSON".equalsIgnoreCase(format)) {
+            result = jsonService.validateJson(input);
+        } else if ("XML".equalsIgnoreCase(format)) {
+            result = xmlService.validateXml(input);
+        } else if ("YAML".equalsIgnoreCase(format)) {
+            result = yamlService.validateYaml(input);
+        } else {
+            outputSection.setOutputValue("Unsupported format");
+            return;
         }
-        return "Unsupported format";
+
+        outputSection.setOutputValue(result.isValid() ? "Valid " + format : "Invalid " + format + "\nErrors: " + result.getErrorMessages());
     }
 
-    // Format JSON or XML using the appropriate service
-    private String formatData(String data, String format, int indent) {
-        if ("JSON".equals(format)) {
-            return jsonService.formatJson(data, Format.valueOf("SPACE_" + indent));
-        } else if ("XML".equals(format)) {
-            return xmlService.formatXml(data, Format.valueOf("SPACE_" + indent));
+    private void formatData() {
+        String input = inputSection.getInputValue();
+        String format = inputSection.getSelectedFormat();
+        Format indentationFormat = Format.valueOf(buttonsSection.getSelectedIndentation());
+
+        String result;
+
+        if ("JSON".equalsIgnoreCase(format)) {
+            result = jsonService.formatJson(input, indentationFormat);
+        } else if ("XML".equalsIgnoreCase(format)) {
+            result = xmlService.formatXml(input, indentationFormat);
+        } else if ("YAML".equalsIgnoreCase(format)) {
+            result = yamlService.formatYaml(input, indentationFormat);
+        } else {
+            outputSection.setOutputValue("Unsupported format");
+            return;
         }
-        return "Unsupported format";
+
+        outputSection.setOutputValue(result);
     }
 
-    // Minify JSON or XML using the appropriate service
-    private String minifyData(String data, String format) {
-        if ("JSON".equals(format)) {
-            return jsonService.minifyJson(data);
-        } else if ("XML".equals(format)) {
-            return xmlService.minifyXml(data);
+    private void minifyData() {
+        String input = inputSection.getInputValue();
+        String format = inputSection.getSelectedFormat();
+
+        String result;
+
+        if ("JSON".equalsIgnoreCase(format)) {
+            result = jsonService.minifyJson(input);
+        } else if ("XML".equalsIgnoreCase(format)) {
+            result = xmlService.minifyXml(input);
+        } else if ("YAML".equalsIgnoreCase(format)) {
+            result = yamlService.minifyYaml(input);
+        } else {
+            outputSection.setOutputValue("Unsupported format");
+            return;
         }
-        return "Unsupported format";
+
+        outputSection.setOutputValue(result);
+    }
+
+    private void convertData() {
+        String input = inputSection.getInputValue();
+        String format = inputSection.getSelectedFormat();  // Current format selected by user (JSON/XML/YAML)
+        ConversionType targetFormat = ConversionType.valueOf(buttonsSection.getSelectedConversionType().toUpperCase()); // Convert target format
+
+        String result;
+
+        try {
+            switch (format.toUpperCase()) {
+                case "JSON":
+                    result = jsonService.convertData(input, targetFormat); // Calls service method based on target format
+                    break;
+                case "XML":
+                    result = xmlService.convertData(input, targetFormat);  // Calls service method based on target format
+                    break;
+                case "YAML":
+                    result = yamlService.convertData(input, targetFormat); // Calls service method based on target format
+                    break;
+                default:
+                    result = "Unsupported input format";
+            }
+            outputSection.setOutputValue(result);  // Show converted result in the output section
+        } catch (Exception e) {
+            outputSection.setOutputValue("Conversion error: " + e.getMessage());
+        }
     }
 }

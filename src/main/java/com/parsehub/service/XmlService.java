@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
+import com.parsehub.util.ConversionType;
 
 @Service
 public class XmlService {
@@ -62,6 +63,27 @@ public class XmlService {
             }
         } catch (IOException e) {
             return "Invalid XML: " + e.getMessage();
+        }
+    }
+
+    public String convertData(String xml, ConversionType targetType) {
+        try {
+            if (targetType == ConversionType.XML) {
+                return xml; // If the target is XML, no conversion needed
+            }
+
+            switch (targetType) {
+                case JSON:
+                    return convertXmlToJson(xml);
+                case YAML:
+                    return convertXmlToYaml(xml);
+                case CSV:
+                    return convertXmlToCsv(xml);
+                default:
+                    return xml;
+            }
+        } catch (Exception e) {
+            return "Invalid XML format: " + e.getMessage();
         }
     }
 

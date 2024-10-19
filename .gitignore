@@ -32,3 +32,14 @@ build/
 
 ### VS Code ###
 .vscode/
+generated/
+node_modules/
+src/main/frontend/generated/
+
+### VAADIN ###
+package-lock.json
+tsconfig.json
+vite.config.ts
+vite.generated.ts
+types.d.ts
+
