@@ -20,7 +20,7 @@ public class InputSection extends VerticalLayout {
         setClassName("input-section");
 
         Span inputLabel = new Span("Input");
-        inputLabel.setClassName("input-label");  // Optional: CSS class for styling
+        inputLabel.setClassName("section-label");  // Optional: CSS class for styling
 
         copyButton = new Button("Copy");
         copyButton.setClassName("copy-button");
@@ -34,7 +34,7 @@ public class InputSection extends VerticalLayout {
         inputArea.setWidthFull();
 
         HorizontalLayout inputControls = new HorizontalLayout();
-        inputControls.setClassName("input-controls-section");
+        inputControls.setClassName("text-area-controls");
         inputControls.add(inputLabel, formatSelector, copyButton);
 
         add(inputControls, inputArea);

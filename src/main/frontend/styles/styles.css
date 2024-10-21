@@ -12,19 +12,29 @@ vaadin-text-area {
     font-family: monospace;
     background-color: #0d1116;
     color: #c9d1d9;
-    border: 1px solid #30363d;
+
     padding: 0;
+    --vaadin-input-field-placeholder-color: #9298a0; /* Set your desired color */
 }
 
 vaadin-text-area::part(input-field) {
     background-color: #0d1116;
-    border: none;
-    font-size: 14px;
+
+    font-size: 16px;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid #30363d;
 }
 
-vaadin-text-area:focus::part(input-field) {
-    outline: none;
+--vaadin-input-field-placeholder-color {
+
+}
+
+vaadin-text-area:focus {
     border: 2px solid #58a6ff; /* Blue focus ring like in the example */
+}
+
+textarea {
+    border-radius: 0 0 8px 8px;
 }
 
 /* Layout for the input and output sections */
@@ -32,6 +42,7 @@ vaadin-text-area:focus::part(input-field) {
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
+    gap: 8px;
 }
 
 /* Button styling */
@@ -43,6 +54,7 @@ vaadin-button {
     border-radius: 8px;
     margin-bottom: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .copy-button {
@@ -59,6 +71,8 @@ vaadin-combo-box {
     background-color: #21262d;
     color: #c9d1d9;
     border-radius: 8px;
+    border: 1px solid #3e444c; /* Same border as buttons */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Match the button shadow */
 }
 
 /* Indentation selection and radio buttons */
@@ -72,14 +86,80 @@ vaadin-radio-button {
 }
 
 .buttons-section {
-    width: 40%;
+    width: 50% !important;
 }
 
-.input-controls-section {
+.text-area-controls {
     width: 100%;
-    background-color: #0d1116;
+    background-color: #171b21;
     border: 1px solid #30363d;
     display: flex;
     justify-content: space-between;
     padding: 0.5rem;
+    border-radius: 8px 8px 0 0;
+    align-items: center;
+}
+
+.section-label {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+vaadin-combo-box {
+    --vaadin-input-field-background: #21262d; /* Background color for the ComboBox */
+    --vaadin-input-field-value-color: #c9d1d9; /* Text color ins    ide the ComboBox */
+    --vaadin-input-field-label-color: #c9d1d9; /* Normal text color */
+}
+
+/* Alternatively, target the label part directly */
+vaadin-combo-box::part(label) {
+    color: #c9d1d9; /* Normal text color */
+}
+
+/* Center the label horizontally and match button text size and weight */
+vaadin-combo-box::part(label),
+.indentation-label { /* You can target both labels if needed */
+    text-align: center;
+    font-size: 16px; /* Match the font size of buttons */
+    font-weight: 600; /* Match the font weight of buttons */
+    display: block;
+    width: 100%;
+}
+
+vaadin-combo-box::part(input-field) {
+    background-color: #21262d; /* Same background color as buttons */
+    color: #c9d1d9; /* Text color */
+    border: none; /* Remove the border */
+}
+
+/* Add focus outline to input field */
+vaadin-combo-box::part(input-field):focus {
+    outline: 2px solid #58a6ff; /* Blue focus ring */
+}
+
+vaadin-combo-box-overlay::part(overlay) {
+    background-color: #1b1e24; /* Match items background */
+}
+
+/* Style the dropdown items (the options) */
+vaadin-combo-box-overlay vaadin-combo-box-item {
+    color: #c9d1d9;
+}
+
+/* Add hover effect for dropdown items */
+vaadin-combo-box-overlay vaadin-combo-box-item:hover {
+    background-color: #30363d; /* Darker hover background */
+}
+
+/* Style the dropdown background and text */
+vaadin-combo-box-overlay {
+    --vaadin-overlay-background: #21262d; /* Dropdown background color */
+    --vaadin-overlay-value-color: #c9d1d9; /* Dropdown text color */
+}
+
+/* Ensure the dropdown arrow matches the buttons style */
+vaadin-combo-box::part(toggle-button) {
+    color: #c9d1d9;
+    background-color: transparent; /* Match button background */
+    border: none;
 }
