@@ -5,13 +5,13 @@ import com.parsehub.service.XmlService;
 import com.parsehub.service.YamlService;
 import com.parsehub.util.ValidationResult;
 import com.parsehub.util.Format;
+import com.parsehub.util.ConversionType;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.parsehub.util.ConversionType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @Route("")
@@ -22,9 +22,9 @@ public class MainView extends VerticalLayout {
     private final XmlService xmlService;
     private final YamlService yamlService;
 
-    private InputSection inputSection;
-    private ButtonsSection buttonsSection;
-    private OutputSection outputSection;
+    private final InputSection inputSection;
+    private final ButtonsSection buttonsSection;
+    private final OutputSection outputSection;
 
     @Autowired
     public MainView(JsonService jsonService, XmlService xmlService, YamlService yamlService) {
@@ -36,19 +36,26 @@ public class MainView extends VerticalLayout {
         buttonsSection = new ButtonsSection();
         outputSection = new OutputSection();
 
-        HorizontalLayout mainLayout = new HorizontalLayout(inputSection, buttonsSection, outputSection);
-        mainLayout.setSizeFull();
+        configureLayout();
 
+        inputSection.getFormatSelector().addValueChangeListener(event -> adjustButtonsVisibility(event.getValue()));
+        wireButtonActions();
+    }
+
+    /**
+     * Configures the main layout by adding sections and setting layout properties.
+     */
+    private void configureLayout() {
+        HorizontalLayout mainLayout = new HorizontalLayout(inputSection, buttonsSection, outputSection);
+        mainLayout.setSizeFull();  // Set full size for responsive design
         add(mainLayout);
         setSizeFull();
+    }
 
-        // Listen to format changes and adjust the visibility of components accordingly
-        inputSection.getFormatSelector().addValueChangeListener(event -> {
-            String selectedFormat = event.getValue();
-            adjustButtonsVisibility(selectedFormat);
-        });
-
-        // Wire button events
+    /**
+     * Wires actions to each button in the buttons section.
+     */
+    private void wireButtonActions() {
         buttonsSection.getValidateButton().addClickListener(event -> validateData());
         buttonsSection.getFormatButton().addClickListener(event -> formatData());
         buttonsSection.getMinifyButton().addClickListener(event -> minifyData());
@@ -56,6 +63,23 @@ public class MainView extends VerticalLayout {
         buttonsSection.getSortButton().addClickListener(event -> sortData());
     }
 
+    /**
+     * Adjusts the visibility of buttons and options based on the selected format.
+     *
+     * @param selectedFormat The format selected in the InputSection.
+     */
+    private void adjustButtonsVisibility(String selectedFormat) {
+        boolean isJson = "JSON".equalsIgnoreCase(selectedFormat);
+
+        // Show or hide the format button, indentation combo box, and sort button based on the format
+        buttonsSection.getFormatButton().setVisible(isJson);
+        buttonsSection.getIndentationComboBox().setVisible(isJson);
+        buttonsSection.getSortButton().setVisible(isJson);
+    }
+
+    /**
+     * Sorts the JSON data if applicable and updates the output section.
+     */
     private void sortData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
@@ -71,38 +95,46 @@ public class MainView extends VerticalLayout {
         outputSection.setOutputValue(result);
     }
 
+    /**
+     * Validates the input data based on the selected format and displays the result in the output section.
+     */
     private void validateData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
         ValidationResult result;
 
-        if ("JSON".equalsIgnoreCase(format)) {
-            result = jsonService.validateJson(input);
-        } else if ("XML".equalsIgnoreCase(format)) {
-            result = xmlService.validateXml(input);
-        } else if ("YAML".equalsIgnoreCase(format)) {
-            result = yamlService.validateYaml(input);
-        } else {
-            outputSection.setOutputValue("Unsupported format");
-            return;
+        switch (format.toUpperCase()) {
+            case "JSON":
+                result = jsonService.validateJson(input);
+                break;
+            case "XML":
+                result = xmlService.validateXml(input);
+                break;
+            case "YAML":
+                result = yamlService.validateYaml(input);
+                break;
+            default:
+                outputSection.setOutputValue("Unsupported format");
+                return;
         }
 
         outputSection.setOutputValue(result.isValid() ? "Valid " + format : "Invalid " + format + "\nErrors: " + result.getErrorMessages());
     }
 
+    /**
+     * Formats the input JSON data according to the selected indentation and updates the output section.
+     */
     private void formatData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
-        String selectedFormat = buttonsSection.getSelectedIndentation();
-
+        String selectedIndentation = buttonsSection.getSelectedIndentation();
         Format indentationFormat;
 
         try {
-            int indentation = Integer.parseInt(selectedFormat);
+            int indentation = Integer.parseInt(selectedIndentation);
             indentationFormat = Format.valueOf("SPACE_" + indentation);
-
         } catch (NumberFormatException e) {
-            indentationFormat = Format.valueOf(buttonsSection.getSelectedIndentation());
+            indentationFormat = Format.valueOf(selectedIndentation);
         }
 
         String result;
@@ -117,56 +149,50 @@ public class MainView extends VerticalLayout {
         outputSection.setOutputValue(result);
     }
 
-    private void adjustButtonsVisibility(String selectedFormat) {
-        boolean isJson = "JSON".equalsIgnoreCase(selectedFormat);
-
-        // Show or hide the format button and indentation combo box based on the format
-        buttonsSection.getFormatButton().setVisible(isJson);
-        buttonsSection.getIndentationComboBox().setVisible(isJson);
-        buttonsSection.getSortButton().setVisible(isJson);
-    }
-
+    /**
+     * Minifies the input data based on the selected format and updates the output section.
+     */
     private void minifyData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
         String result;
 
-        if ("JSON".equalsIgnoreCase(format)) {
-            result = jsonService.minifyJson(input);
-        } else if ("XML".equalsIgnoreCase(format)) {
-            result = xmlService.minifyXml(input);
-        } else if ("YAML".equalsIgnoreCase(format)) {
-            result = yamlService.minifyYaml(input);
-        } else {
-            outputSection.setOutputValue("Unsupported format");
-            return;
+        switch (format.toUpperCase()) {
+            case "JSON":
+                result = jsonService.minifyJson(input);
+                break;
+            case "XML":
+                result = xmlService.minifyXml(input);
+                break;
+            case "YAML":
+                result = yamlService.minifyYaml(input);
+                break;
+            default:
+                outputSection.setOutputValue("Unsupported format");
+                return;
         }
 
         outputSection.setOutputValue(result);
     }
 
+    /**
+     * Converts the input data from one format to another and updates the output section.
+     */
     private void convertData() {
         String input = inputSection.getInputValue();
-        String format = inputSection.getSelectedFormat();  // Current format selected by user (JSON/XML/YAML)
-        ConversionType targetFormat = ConversionType.valueOf(buttonsSection.getSelectedConversionType().toUpperCase()); // Convert target format
+        String format = inputSection.getSelectedFormat();
+        ConversionType targetFormat = ConversionType.valueOf(buttonsSection.getSelectedConversionType().toUpperCase());
 
         String result;
 
         try {
-            switch (format.toUpperCase()) {
-                case "JSON":
-                    result = jsonService.convertData(input, targetFormat); // Calls service method based on target format
-                    break;
-                case "XML":
-                    result = xmlService.convertData(input, targetFormat);  // Calls service method based on target format
-                    break;
-                case "YAML":
-                    result = yamlService.convertData(input, targetFormat); // Calls service method based on target format
-                    break;
-                default:
-                    result = "Unsupported input format";
-            }
-            outputSection.setOutputValue(result);  // Show converted result in the output section
+            result = switch (format.toUpperCase()) {
+                case "JSON" -> jsonService.convertData(input, targetFormat);
+                case "XML" -> xmlService.convertData(input, targetFormat);
+                case "YAML" -> yamlService.convertData(input, targetFormat);
+                default -> "Unsupported input format";
+            };
+            outputSection.setOutputValue(result);
         } catch (Exception e) {
             outputSection.setOutputValue("Conversion error: " + e.getMessage());
         }

@@ -6,69 +6,132 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ButtonsSection extends VerticalLayout {
 
-    private Button validateButton;
-    private Button formatButton;
-    private Button minifyButton;
-    private Button sortButton;
-    private ComboBox<String> indentationComboBox;
-
-    private ComboBox<String> conversionComboBox; // Conversion format selection
-    private Button convertButton; // Button to trigger conversion
+    private final Button validateButton;
+    private final Button formatButton;
+    private final Button minifyButton;
+    private final Button sortButton;
+    private final ComboBox<String> indentationComboBox;
+    private final ComboBox<String> conversionComboBox;
+    private final Button convertButton;
 
     public ButtonsSection() {
-        // Initialize existing buttons
-        validateButton = new Button("Validate");
-        formatButton = new Button("Format");
-        minifyButton = new Button("Minify");
-        convertButton = new Button("Convert Data");
-        sortButton = new Button("Sort Data");
+        validateButton = createButton("Validate");
+        formatButton = createButton("Format");
+        minifyButton = createButton("Minify");
+        sortButton = createButton("Sort Data");
+        convertButton = createButton("Convert Data");
 
-        // Initialize ComboBox for indentation selection
-        indentationComboBox = new ComboBox<>("Indentation");
-        indentationComboBox.setItems("2", "4");
-        indentationComboBox.setValue("2"); // Default value
+        indentationComboBox = createComboBox("Indentation", "2", "4");
+        indentationComboBox.setValue("2");
 
-        // Initialize ComboBox for conversion types
-        conversionComboBox = new ComboBox<>("Convert to");
-        conversionComboBox.setItems("JSON", "XML", "YAML", "CSV"); // Available conversion formats
-        conversionComboBox.setValue("JSON"); // Default to JSON
+        conversionComboBox = createComboBox("Convert to", "JSON", "XML", "YAML", "CSV");
+        conversionComboBox.setValue("JSON");
 
-        // Initialize Convert button
-
-        // Add everything to the layout
-        add(validateButton, minifyButton, sortButton, indentationComboBox, formatButton, conversionComboBox, convertButton);
+        // add all components to the layout
+        addComponentsToLayout();
         setSpacing(true);
-        setClassName("buttons-section"); // Optional styling class for ButtonsSection
+        setClassName("buttons-section");
     }
 
+    /**
+     * Helper method to create a button with a given label.
+     *
+     * @param label the label of the button
+     * @return the created button
+     */
+    private Button createButton(String label) {
+        return new Button(label);
+    }
+
+    /**
+     * Helper method to create a ComboBox with a label and given items.
+     *
+     * @param label the label of the ComboBox
+     * @param items the items to display in the ComboBox
+     * @return the created ComboBox
+     */
+    private ComboBox<String> createComboBox(String label, String... items) {
+        ComboBox<String> comboBox = new ComboBox<>(label);
+        comboBox.setItems(items);
+        return comboBox;
+    }
+
+    /**
+     * Adds all components to the layout in the correct order.
+     */
+    private void addComponentsToLayout() {
+        add(validateButton, minifyButton, sortButton, indentationComboBox,
+                formatButton, conversionComboBox, convertButton);
+    }
+
+    /**
+     * Returns the sort button used for sorting the data.
+     *
+     * @return the sort button
+     */
     public Button getSortButton() {
         return sortButton;
     }
 
+    /**
+     * Returns the validate button used for validating data.
+     *
+     * @return the validate button
+     */
     public Button getValidateButton() {
         return validateButton;
     }
 
+    /**
+     * Returns the format button used for formatting data.
+     *
+     * @return the format button
+     */
     public Button getFormatButton() {
         return formatButton;
     }
 
+    /**
+     * Returns the minify button used for minifying data.
+     *
+     * @return the minify button
+     */
     public Button getMinifyButton() {
         return minifyButton;
     }
 
+    /**
+     * Returns the selected value from the indentation ComboBox.
+     *
+     * @return the selected indentation as a String
+     */
     public String getSelectedIndentation() {
         return indentationComboBox.getValue();
     }
 
+    /**
+     * Returns the selected conversion type from the conversion ComboBox.
+     *
+     * @return the selected conversion type as a String
+     */
     public String getSelectedConversionType() {
         return conversionComboBox.getValue();
     }
 
+    /**
+     * Returns the convert button used for converting data between formats.
+     *
+     * @return the convert button
+     */
     public Button getConvertButton() {
         return convertButton;
     }
 
+    /**
+     * Returns the ComboBox used for selecting the indentation level.
+     *
+     * @return the indentation ComboBox
+     */
     public ComboBox<String> getIndentationComboBox() {
         return indentationComboBox;
     }
