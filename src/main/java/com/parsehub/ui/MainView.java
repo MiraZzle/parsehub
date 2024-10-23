@@ -53,6 +53,22 @@ public class MainView extends VerticalLayout {
         buttonsSection.getFormatButton().addClickListener(event -> formatData());
         buttonsSection.getMinifyButton().addClickListener(event -> minifyData());
         buttonsSection.getConvertButton().addClickListener(event -> convertData());
+        buttonsSection.getSortButton().addClickListener(event -> sortData());
+    }
+
+    private void sortData() {
+        String input = inputSection.getInputValue();
+        String format = inputSection.getSelectedFormat();
+        String result;
+
+        if ("JSON".equalsIgnoreCase(format)) {
+            result = jsonService.sortJson(input);
+        } else {
+            outputSection.setOutputValue("Unsupported format");
+            return;
+        }
+
+        outputSection.setOutputValue(result);
     }
 
     private void validateData() {
@@ -107,6 +123,7 @@ public class MainView extends VerticalLayout {
         // Show or hide the format button and indentation combo box based on the format
         buttonsSection.getFormatButton().setVisible(isJson);
         buttonsSection.getIndentationComboBox().setVisible(isJson);
+        buttonsSection.getSortButton().setVisible(isJson);
     }
 
     private void minifyData() {

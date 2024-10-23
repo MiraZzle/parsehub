@@ -10,26 +10,34 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.StringWriter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Service class for handling YAML-related operations such as validation, formatting, and conversion.
+ */
 @Service
-public class YamlService {
-
+public class YamlService implements IDataService {
     private final Yaml yamlParser;
 
+    /**
+     * Initializes the service with a singleton instance of SnakeYAML parser.
+     * The parser is initialized with custom LoaderOptions and Constructor for performance and flexibility.
+     */
     public YamlService() {
-        // Initialize LoaderOptions and Constructor for the YAML parser
         LoaderOptions loaderOptions = new LoaderOptions();
         Constructor constructor = new Constructor(loaderOptions);
-        this.yamlParser = new Yaml(constructor);  // Initialize SnakeYAML parser with options
+        this.yamlParser = new Yaml(constructor);
     }
 
-    // Validate YAML
+    /**
+     * Validates a YAML string by parsing it into a map.
+     *
+     * @param yaml the YAML string to validate
+     * @return ValidationResult indicating whether the YAML is valid
+     */
     public ValidationResult validateYaml(String yaml) {
         ValidationResult result = new ValidationResult();
         try {
-            // Parse the YAML into a Map to check its validity
             Map<String, Object> yamlData = yamlParser.load(yaml);
             if (yamlData != null) {
                 result.setValid(true);
@@ -38,7 +46,6 @@ public class YamlService {
                 result.addErrorMessage("YAML is empty or invalid.");
             }
         } catch (ParserException e) {
-            // Catch and handle SnakeYAML parsing errors
             result.setValid(false);
             result.addErrorMessage("YAML Parsing Error: " + e.getMessage());
         } catch (Exception e) {
@@ -48,26 +55,27 @@ public class YamlService {
         return result;
     }
 
-    // Format YAML (Pretty-print or minified)
+    /**
+     * Formats a YAML string either as pretty-printed or minified.
+     *
+     * @param yaml   the YAML string to format
+     * @param format the format type (pretty or compact)
+     * @return the formatted YAML string
+     */
     public String formatYaml(String yaml, Format format) {
         try {
             Map<String, Object> yamlData = yamlParser.load(yaml);
-
             if (yamlData == null) {
                 return "Invalid YAML: empty or null";
             }
 
-            // Pretty print or minify based on the format
             StringWriter writer = new StringWriter();
             if (format == Format.COMPACT) {
-                // Minified YAML (no pretty printing)
-                yamlParser.dump(yamlData, writer);
+                yamlParser.dump(yamlData, writer); // Minified YAML
             } else {
-                // Pretty printing: adding spaces for formatting
-                Yaml prettyPrinter = new Yaml();  // Use default Yaml object for printing
+                Yaml prettyPrinter = new Yaml();  // Use default Yaml for pretty-printing
                 prettyPrinter.dump(yamlData, writer);
             }
-
             return writer.toString();
         } catch (ParserException e) {
             return "YAML Formatting Error: " + e.getMessage();
@@ -76,107 +84,103 @@ public class YamlService {
         }
     }
 
-    // Minify YAML (reuse the compact format)
-    public String minifyYaml(String yaml) {
-        return formatYaml(yaml, Format.COMPACT);
-    }
-
-
+    /**
+     * Converts YAML to different formats (JSON, XML, or CSV).
+     *
+     * @param yaml       the input YAML string
+     * @param targetType the target format type
+     * @return the converted string
+     */
     public String convertData(String yaml, ConversionType targetType) {
         try {
-            if (targetType == ConversionType.YAML) {
-                return yaml; // If the target is XML, no conversion needed
-            }
-
-            switch (targetType) {
-                case JSON:
-                    return convertYamlToJson(yaml);
-                case XML:
-                    return convertYamlToXml(yaml);
-                case CSV:
-                    return convertYamlToCsv(yaml);
-                default:
-                    return yaml;
-            }
+            return switch (targetType) {
+                case JSON -> convertYamlToJson(yaml);
+                case XML -> convertYamlToXml(yaml);
+                case CSV -> convertYamlToCsv(yaml);
+                default -> yaml;
+            };
         } catch (Exception e) {
-            return "Invalid XML format: " + e.getMessage();
+            return "Invalid YAML format: " + e.getMessage();
         }
     }
 
-    // Convert YAML to JSON (using manual conversion)
+    /**
+     * Converts YAML to JSON format.
+     *
+     * @param yaml the YAML string
+     * @return the converted JSON string
+     */
     public String convertYamlToJson(String yaml) {
         try {
             Map<String, Object> yamlData = yamlParser.load(yaml);
-
             if (yamlData == null) {
                 return "Invalid YAML: empty or null";
             }
 
-            // Convert the YAML Map to a JSON-like string
             StringBuilder jsonBuilder = new StringBuilder();
             jsonBuilder.append("{");
-            yamlData.forEach((key, value) -> {
-                jsonBuilder.append("\"").append(key).append("\": ").append("\"").append(value).append("\", ");
-            });
-            // Remove the last comma and space
+            yamlData.forEach((key, value) -> jsonBuilder.append("\"").append(key).append("\": \"").append(value).append("\", "));
             if (jsonBuilder.length() > 1) {
-                jsonBuilder.setLength(jsonBuilder.length() - 2);
+                jsonBuilder.setLength(jsonBuilder.length() - 2); // Remove the last comma
             }
             jsonBuilder.append("}");
-
             return jsonBuilder.toString();
         } catch (ParserException e) {
             return "YAML to JSON Conversion Error: " + e.getMessage();
-        } catch (Exception e) {
-            return "YAML to JSON Generic Conversion Error: " + e.getMessage();
         }
     }
 
-    // Convert YAML to XML (using manual conversion)
+    /**
+     * Converts YAML to XML format.
+     *
+     * @param yaml the YAML string
+     * @return the converted XML string
+     */
     public String convertYamlToXml(String yaml) {
         try {
             Map<String, Object> yamlData = yamlParser.load(yaml);
-
             if (yamlData == null) {
                 return "Invalid YAML: empty or null";
             }
 
-            // Convert the YAML Map to a simple XML-like string
             StringBuilder xmlBuilder = new StringBuilder();
             xmlBuilder.append("<root>");
-            yamlData.forEach((key, value) -> {
-                xmlBuilder.append("<").append(key).append(">").append(value).append("</").append(key).append(">");
-            });
+            yamlData.forEach((key, value) -> xmlBuilder.append("<").append(key).append(">").append(value).append("</").append(key).append(">"));
             xmlBuilder.append("</root>");
-
             return xmlBuilder.toString();
         } catch (ParserException e) {
             return "YAML to XML Conversion Error: " + e.getMessage();
-        } catch (Exception e) {
-            return "YAML to XML Generic Conversion Error: " + e.getMessage();
         }
     }
 
-    // Convert YAML to CSV (using manual conversion)
+    /**
+     * Converts YAML to CSV format.
+     *
+     * @param yaml the YAML string
+     * @return the converted CSV string
+     */
     public String convertYamlToCsv(String yaml) {
         try {
             Map<String, Object> yamlData = yamlParser.load(yaml);
-
             if (yamlData == null) {
                 return "Invalid YAML: empty or null";
             }
 
-            // Convert the YAML Map to a simple CSV-like string
             StringBuilder csvBuilder = new StringBuilder();
-            yamlData.forEach((key, value) -> {
-                csvBuilder.append(key).append(",").append(value).append("\n");
-            });
-
+            yamlData.forEach((key, value) -> csvBuilder.append(key).append(",").append(value).append("\n"));
             return csvBuilder.toString();
         } catch (ParserException e) {
             return "YAML to CSV Conversion Error: " + e.getMessage();
-        } catch (Exception e) {
-            return "YAML to CSV Generic Conversion Error: " + e.getMessage();
         }
+    }
+
+    /**
+     * Minifies the YAML by removing spaces (compact format).
+     *
+     * @param yaml the YAML string
+     * @return the minified YAML string
+     */
+    public String minifyYaml(String yaml) {
+        return formatYaml(yaml, Format.COMPACT);
     }
 }

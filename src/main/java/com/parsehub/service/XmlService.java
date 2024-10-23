@@ -6,41 +6,44 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.parsehub.util.ValidationResult;
-import com.parsehub.util.Format;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.List;
-import java.util.Map;
 import com.parsehub.util.ConversionType;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
 
+/**
+ * Service class for handling XML-related operations such as validation, formatting, and conversion.
+ */
 @Service
-public class XmlService {
-
+public class XmlService implements IDataService {
     private final XmlMapper xmlMapper;
+    private final ObjectMapper objectMapper;
+    private final CsvMapper csvMapper;
+
+    /**
+     * Constructor that initializes singleton mappers.
+     * ObjectMapper, XmlMapper, and CsvMapper are reused across the service methods.
+     */
     public XmlService() {
-        this.xmlMapper = new XmlMapper();
+        this.xmlMapper = new XmlMapper(); // Reused for XML-related operations
+        this.objectMapper = new ObjectMapper(); // Reused for JSON operations
+        this.csvMapper = new CsvMapper(); // Reused for CSV operations
     }
 
-    // XML Validation against a Schema (XSD)
+    /**
+     * Validates the given XML string by checking if it's well-formed.
+     *
+     * @param xml the input XML string to validate
+     * @return ValidationResult object indicating whether the XML is valid
+     */
     public ValidationResult validateXml(String xml) {
         ValidationResult result = new ValidationResult();
 
         try {
-            // Just check if the XML is well-formed (no XSD validation)
-            XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.readTree(new StringReader(xml));  // If well-formed, this will succeed
-
+            // Check if the XML is well-formed
+            xmlMapper.readTree(new StringReader(xml));
             result.setValid(true);
         } catch (IOException e) {
             result.setValid(false);
@@ -50,73 +53,79 @@ public class XmlService {
         return result;
     }
 
+    /**
+     * Converts the given XML string into the specified format (JSON, YAML, or CSV).
+     *
+     * @param xml the input XML string to convert
+     * @param targetType the target conversion format
+     * @return the converted data as a string
+     */
     public String convertData(String xml, ConversionType targetType) {
         try {
-            if (targetType == ConversionType.XML) {
-                return xml; // If the target is XML, no conversion needed
-            }
-
-            switch (targetType) {
-                case JSON:
-                    return convertXmlToJson(xml);
-                case YAML:
-                    return convertXmlToYaml(xml);
-                case CSV:
-                    return convertXmlToCsv(xml);
-                default:
-                    return xml;
-            }
+            return switch (targetType) {
+                case JSON -> convertXmlToJson(xml);
+                case YAML -> convertXmlToYaml(xml);
+                case CSV -> convertXmlToCsv(xml);
+                default -> xml;
+            };
         } catch (Exception e) {
             return "Invalid XML format: " + e.getMessage();
         }
     }
 
-
-    // Convert XML to JSON
+    /**
+     * Converts XML to JSON format.
+     *
+     * @param xml the input XML string
+     * @return the converted JSON string
+     */
     public String convertXmlToJson(String xml) {
         try {
-            XmlMapper xmlMapper = new XmlMapper();
             JsonNode jsonNode = xmlMapper.readTree(new StringReader(xml));
-            ObjectMapper jsonMapper = new ObjectMapper();
-            return jsonMapper.writeValueAsString(jsonNode);
+            return objectMapper.writeValueAsString(jsonNode);
         } catch (IOException e) {
             return "Invalid XML: " + e.getMessage();
         }
     }
 
-    // Convert XML to YAML (via JSON conversion)
+    /**
+     * Converts XML to YAML format by first converting it to JSON and then to YAML.
+     *
+     * @param xml the input XML string
+     * @return the converted YAML string
+     */
     public String convertXmlToYaml(String xml) {
         try {
-            // First, convert XML to JSON
-            String json = convertXmlToJson(xml);
-            ObjectMapper jsonMapper = new ObjectMapper();
-            JsonNode jsonNode = jsonMapper.readTree(json);
+            String json = convertXmlToJson(xml); // First, convert XML to JSON
+            JsonNode jsonNode = objectMapper.readTree(json);
 
             // Convert JSON to YAML
             DumperOptions options = new DumperOptions();
             options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             Yaml yaml = new Yaml(options);
-            Object object = jsonMapper.convertValue(jsonNode, Object.class);
+            Object object = objectMapper.convertValue(jsonNode, Object.class);
             return yaml.dump(object);
         } catch (IOException e) {
             return "Invalid XML: " + e.getMessage();
         }
     }
 
-    // Convert XML to CSV
+    /**
+     * Converts XML to CSV format by first converting it to JSON and then to CSV.
+     *
+     * @param xml the input XML string
+     * @return the converted CSV string
+     */
     public String convertXmlToCsv(String xml) {
         try {
-            XmlMapper xmlMapper = new XmlMapper();
             JsonNode jsonNode = xmlMapper.readTree(new StringReader(xml));
-
-            CsvMapper csvMapper = new CsvMapper();
             CsvSchema.Builder schemaBuilder = CsvSchema.builder();
 
             if (!jsonNode.isArray()) {
                 throw new IllegalArgumentException("XML must represent an array-like structure for CSV conversion");
             }
 
-            // Build schema from the first element (assuming JSON-like data structure)
+            // Build schema from the first element of the array
             JsonNode firstElement = jsonNode.elements().next();
             firstElement.fieldNames().forEachRemaining(schemaBuilder::addColumn);
 
@@ -127,12 +136,16 @@ public class XmlService {
         }
     }
 
-    // Minify XML (remove indentation and whitespace)
+    /**
+     * Minifies the given XML string by removing all indentation and unnecessary whitespace.
+     *
+     * @param xml the input XML string
+     * @return the minified XML string
+     */
     public String minifyXml(String xml) {
         try {
-            XmlMapper xmlMapper = new XmlMapper();
             JsonNode tree = xmlMapper.readTree(new StringReader(xml));
-            return xmlMapper.writeValueAsString(tree); // Minified XML
+            return xmlMapper.writeValueAsString(tree); // Return minified XML
         } catch (IOException e) {
             return "Invalid XML: " + e.getMessage();
         }

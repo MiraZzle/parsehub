@@ -9,6 +9,7 @@ public class ButtonsSection extends VerticalLayout {
     private Button validateButton;
     private Button formatButton;
     private Button minifyButton;
+    private Button sortButton;
     private ComboBox<String> indentationComboBox;
 
     private ComboBox<String> conversionComboBox; // Conversion format selection
@@ -20,6 +21,7 @@ public class ButtonsSection extends VerticalLayout {
         formatButton = new Button("Format");
         minifyButton = new Button("Minify");
         convertButton = new Button("Convert Data");
+        sortButton = new Button("Sort Data");
 
         // Initialize ComboBox for indentation selection
         indentationComboBox = new ComboBox<>("Indentation");
@@ -34,9 +36,13 @@ public class ButtonsSection extends VerticalLayout {
         // Initialize Convert button
 
         // Add everything to the layout
-        add(validateButton, minifyButton, indentationComboBox, formatButton, conversionComboBox, convertButton);
+        add(validateButton, minifyButton, sortButton, indentationComboBox, formatButton, conversionComboBox, convertButton);
         setSpacing(true);
         setClassName("buttons-section"); // Optional styling class for ButtonsSection
+    }
+
+    public Button getSortButton() {
+        return sortButton;
     }
 
     public Button getValidateButton() {
