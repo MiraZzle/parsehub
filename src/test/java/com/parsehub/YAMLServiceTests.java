@@ -1,10 +1,10 @@
-package com.example.vaadin_test;
+package com.parsehub;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VaadinTestApplicationTests {
+class YAMLServiceTests {
 
     @Test
     void contextLoads() {
