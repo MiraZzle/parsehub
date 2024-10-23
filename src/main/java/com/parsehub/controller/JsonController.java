@@ -21,9 +21,6 @@ public class JsonController {
 
     @PostMapping("/validate")
     public ValidationResult validateJson(@RequestBody String json) {
-        // log the request
-        System.out.println("Request received: " + json);
-
         return jsonService.validateJson(json);
     }
 

@@ -1,8 +1,6 @@
 package com.parsehub.controller;
 
 import com.parsehub.service.XmlService;
-import com.parsehub.util.ConversionType;
-import com.parsehub.util.Format;
 import com.parsehub.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +17,7 @@ public class XmlController {
     }
 
     @PostMapping("/validate")
-    public ValidationResult validateXml(@RequestBody String xml) {
-        System.out.println("Request received: " + xml);
-
-        return xmlService.validateXml(xml);
-    }
+    public ValidationResult validateXml(@RequestBody String xml) { return xmlService.validateXml(xml); }
 
     @PostMapping("/minify")
     public String minifyXml(@RequestBody String xml) {

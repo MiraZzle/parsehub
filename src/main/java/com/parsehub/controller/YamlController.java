@@ -4,7 +4,6 @@ import com.parsehub.service.YamlService;
 import com.parsehub.util.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.parsehub.util.Format;
 
 @RestController
 @RequestMapping("/api/v1/yaml")
