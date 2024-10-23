@@ -22,12 +22,6 @@ public class YamlController {
         return yamlService.validateYaml(yaml);
     }
 
-    @PostMapping("/format/{format}")
-    public String formatYaml(@RequestBody String yaml, @PathVariable String format) {
-        Format formatEnum = Format.valueOf(format.toUpperCase());
-        return yamlService.formatYaml(yaml, formatEnum);
-    }
-
     @PostMapping("/minify")
     public String minifyYaml(@RequestBody String yaml) {
         return yamlService.minifyYaml(yaml);

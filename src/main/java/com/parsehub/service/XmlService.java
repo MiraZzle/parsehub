@@ -50,47 +50,6 @@ public class XmlService {
         return result;
     }
 
-    // Formatting XML based on pretty-print or minify styles
-    public String formatXml(String xml, Format format) {
-        try {
-            // Parse the XML into a generic tree structure
-            JsonNode tree = xmlMapper.readTree(new StringReader(xml));
-
-            // Set custom indentation levels based on the format
-            int indentationLevel;
-            switch (format) {
-                case SPACE_2:
-                    indentationLevel = 2;
-                    break;
-                case SPACE_4:
-                    indentationLevel = 4;
-                    break;
-                default:
-                    indentationLevel = 4; // Default to 4 spaces if format is unknown
-            }
-
-
-            // Return the formatted XML string
-            return applyIndentation(xml, indentationLevel);
-
-        } catch (IOException e) {
-            return "Invalid XML: " + e.getMessage();
-        }
-    }
-
-    private String applyIndentation(String xmlString, int indentationLevel) {
-        String[] lines = xmlString.split("\n");
-        StringBuilder indentedXml = new StringBuilder();
-
-        for (String line : lines) {
-            // Apply custom indentation by prepending spaces
-            String indentedLine = " ".repeat(indentationLevel) + line;
-            indentedXml.append(indentedLine).append("\n");
-        }
-
-        return indentedXml.toString();
-    }
-
     public String convertData(String xml, ConversionType targetType) {
         try {
             if (targetType == ConversionType.XML) {

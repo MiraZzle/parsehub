@@ -93,10 +93,6 @@ public class MainView extends VerticalLayout {
 
         if ("JSON".equalsIgnoreCase(format)) {
             result = jsonService.formatJson(input, indentationFormat);
-        } else if ("XML".equalsIgnoreCase(format)) {
-            result = xmlService.formatXml(input, indentationFormat);
-        } else if ("YAML".equalsIgnoreCase(format)) {
-            result = yamlService.formatYaml(input, indentationFormat);
         } else {
             outputSection.setOutputValue("Unsupported format");
             return;

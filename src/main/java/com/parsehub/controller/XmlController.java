@@ -25,12 +25,6 @@ public class XmlController {
         return xmlService.validateXml(xml);
     }
 
-    @PostMapping("/format/{format}")
-    public String formatXml(@RequestBody String xml, @PathVariable String format) {
-        Format formatEnum = Format.valueOf(format.toUpperCase());
-        return xmlService.formatXml(xml, formatEnum);
-    }
-
     @PostMapping("/minify")
     public String minifyXml(@RequestBody String xml) {
         return xmlService.minifyXml(xml);
