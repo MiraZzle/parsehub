@@ -42,6 +42,12 @@ public class MainView extends VerticalLayout {
         add(mainLayout);
         setSizeFull();
 
+        // Listen to format changes and adjust the visibility of components accordingly
+        inputSection.getFormatSelector().addValueChangeListener(event -> {
+            String selectedFormat = event.getValue();
+            adjustButtonsVisibility(selectedFormat);
+        });
+
         // Wire button events
         buttonsSection.getValidateButton().addClickListener(event -> validateData());
         buttonsSection.getFormatButton().addClickListener(event -> formatData());
@@ -71,7 +77,17 @@ public class MainView extends VerticalLayout {
     private void formatData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
-        Format indentationFormat = Format.valueOf(buttonsSection.getSelectedIndentation());
+        String selectedFormat = buttonsSection.getSelectedIndentation();
+
+        Format indentationFormat;
+
+        try {
+            int indentation = Integer.parseInt(selectedFormat);
+            indentationFormat = Format.valueOf("SPACE_" + indentation);
+
+        } catch (NumberFormatException e) {
+            indentationFormat = Format.valueOf(buttonsSection.getSelectedIndentation());
+        }
 
         String result;
 
@@ -89,10 +105,17 @@ public class MainView extends VerticalLayout {
         outputSection.setOutputValue(result);
     }
 
+    private void adjustButtonsVisibility(String selectedFormat) {
+        boolean isJson = "JSON".equalsIgnoreCase(selectedFormat);
+
+        // Show or hide the format button and indentation combo box based on the format
+        buttonsSection.getFormatButton().setVisible(isJson);
+        buttonsSection.getIndentationComboBox().setVisible(isJson);
+    }
+
     private void minifyData() {
         String input = inputSection.getInputValue();
         String format = inputSection.getSelectedFormat();
-
         String result;
 
         if ("JSON".equalsIgnoreCase(format)) {

@@ -17,7 +17,7 @@ public class ButtonsSection extends VerticalLayout {
     public ButtonsSection() {
         // Initialize existing buttons
         validateButton = new Button("Validate");
-        formatButton = new Button("Format / Beautify");
+        formatButton = new Button("Format");
         minifyButton = new Button("Minify");
         convertButton = new Button("Convert Data");
 
@@ -34,7 +34,7 @@ public class ButtonsSection extends VerticalLayout {
         // Initialize Convert button
 
         // Add everything to the layout
-        add(validateButton, formatButton, minifyButton, indentationComboBox, conversionComboBox, convertButton);
+        add(validateButton, minifyButton, indentationComboBox, formatButton, conversionComboBox, convertButton);
         setSpacing(true);
         setClassName("buttons-section"); // Optional styling class for ButtonsSection
     }
@@ -61,5 +61,9 @@ public class ButtonsSection extends VerticalLayout {
 
     public Button getConvertButton() {
         return convertButton;
+    }
+
+    public ComboBox<String> getIndentationComboBox() {
+        return indentationComboBox;
     }
 }

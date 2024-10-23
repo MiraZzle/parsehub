@@ -21,11 +21,15 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 import com.parsehub.util.ConversionType;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
 
 @Service
 public class XmlService {
 
+    private final XmlMapper xmlMapper;
     public XmlService() {
+        this.xmlMapper = new XmlMapper();
     }
 
     // XML Validation against a Schema (XSD)
@@ -49,21 +53,42 @@ public class XmlService {
     // Formatting XML based on pretty-print or minify styles
     public String formatXml(String xml, Format format) {
         try {
-            XmlMapper xmlMapper = new XmlMapper();
+            // Parse the XML into a generic tree structure
             JsonNode tree = xmlMapper.readTree(new StringReader(xml));
 
+            // Set custom indentation levels based on the format
+            int indentationLevel;
             switch (format) {
                 case SPACE_2:
-                case SPACE_3:
+                    indentationLevel = 2;
+                    break;
                 case SPACE_4:
-                    return xmlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tree); // Pretty-print
-                case COMPACT:
+                    indentationLevel = 4;
+                    break;
                 default:
-                    return xmlMapper.writeValueAsString(tree); // Minified XML
+                    indentationLevel = 4; // Default to 4 spaces if format is unknown
             }
+
+
+            // Return the formatted XML string
+            return applyIndentation(xml, indentationLevel);
+
         } catch (IOException e) {
             return "Invalid XML: " + e.getMessage();
         }
+    }
+
+    private String applyIndentation(String xmlString, int indentationLevel) {
+        String[] lines = xmlString.split("\n");
+        StringBuilder indentedXml = new StringBuilder();
+
+        for (String line : lines) {
+            // Apply custom indentation by prepending spaces
+            String indentedLine = " ".repeat(indentationLevel) + line;
+            indentedXml.append(indentedLine).append("\n");
+        }
+
+        return indentedXml.toString();
     }
 
     public String convertData(String xml, ConversionType targetType) {
@@ -86,6 +111,7 @@ public class XmlService {
             return "Invalid XML format: " + e.getMessage();
         }
     }
+
 
     // Convert XML to JSON
     public String convertXmlToJson(String xml) {

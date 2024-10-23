@@ -43,6 +43,11 @@ public class InputSection extends VerticalLayout {
         setPadding(true);
     }
 
+    // Method to access the format selector (RadioButtonGroup)
+    public RadioButtonGroup<String> getFormatSelector() {
+        return formatSelector;
+    }
+
     public String getInputValue() {
         return inputArea.getValue();
     }
