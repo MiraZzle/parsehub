@@ -14,12 +14,10 @@ import java.nio.charset.StandardCharsets;
 public class OutputSection extends VerticalLayout {
 
     private final TextArea outputArea;
-    private final Button copyButton;
     private final Anchor downloadAnchor;
 
     public OutputSection() {
         Span outputLabel = createLabel("Output");
-        copyButton = createCopyButton();
         outputArea = createTextArea();
         downloadAnchor = createDownloadAnchor();
 
@@ -131,7 +129,7 @@ public class OutputSection extends VerticalLayout {
 
         Anchor anchor = new Anchor();
         anchor.add(downloadButton);
-        anchor.setTarget("_self");
+        anchor.setTarget("_self"); // Forces to download in current window
         return anchor;
     }
 }

@@ -1,20 +1,18 @@
-/* Global layout settings */
 body {
     background-color: #0d1116;
     color: #c9d1d9;
 }
 
-/* Style for the TextArea components */
 vaadin-text-area {
     width: 100%;
-    height: calc(100% - 60px); /* Matches the React example's textarea height */
+    height: calc(100% - 60px);
     resize: none;
     font-family: monospace;
     background-color: #0d1116;
     color: #c9d1d9;
 
     padding: 0;
-    --vaadin-input-field-placeholder-color: #9298a0; /* Set your desired color */
+    --vaadin-input-field-placeholder-color: #9298a0;
 }
 
 vaadin-text-area::part(input-field) {
@@ -30,14 +28,13 @@ vaadin-text-area::part(input-field) {
 }
 
 vaadin-text-area:focus {
-    border: 2px solid #58a6ff; /* Blue focus ring like in the example */
+    border: 2px solid #58a6ff;
 }
 
 textarea {
     border-radius: 0 0 8px 8px;
 }
 
-/* Layout for the input and output sections */
 .input-section, .output-section {
     border-radius: 8px;
     padding: 16px;
@@ -45,7 +42,6 @@ textarea {
     gap: 8px;
 }
 
-/* Button styling */
 vaadin-button {
     width: 100%;
     background-color: #21262d;
@@ -65,17 +61,15 @@ vaadin-button:hover {
     background-color: #30363d;
 }
 
-/* ComboBox styling */
 vaadin-combo-box {
     width: 100%;
     background-color: #21262d;
     color: #c9d1d9;
     border-radius: 8px;
-    border: 1px solid #3e444c; /* Same border as buttons */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Match the button shadow */
+    border: 1px solid #3e444c;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Indentation selection and radio buttons */
 vaadin-radio-group {
     display: flex;
     justify-content: flex-start;
@@ -106,66 +100,59 @@ vaadin-radio-button {
 }
 
 vaadin-combo-box {
-    --vaadin-input-field-background: #21262d; /* Background color for the ComboBox */
-    --vaadin-input-field-value-color: #c9d1d9; /* Text color ins    ide the ComboBox */
-    --vaadin-input-field-label-color: #c9d1d9; /* Normal text color */
+    --vaadin-input-field-background: #21262d;
+    --vaadin-input-field-value-color: #c9d1d9;
+    --vaadin-input-field-label-color: #c9d1d9;
 }
 
-/* Alternatively, target the label part directly */
 vaadin-combo-box::part(label) {
-    color: #c9d1d9; /* Normal text color */
+    color: #c9d1d9;
 }
 
-/* Center the label horizontally and match button text size and weight */
 vaadin-combo-box::part(label),
-.indentation-label { /* You can target both labels if needed */
+.indentation-label {
     text-align: center;
-    font-size: 16px; /* Match the font size of buttons */
-    font-weight: 600; /* Match the font weight of buttons */
+    font-size: 16px;
+    font-weight: 600;
     display: block;
     width: 100%;
 }
 
 vaadin-combo-box::part(input-field) {
-    background-color: #21262d; /* Same background color as buttons */
-    color: #c9d1d9; /* Text color */
-    border: none; /* Remove the border */
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: none;
 }
 
-/* Add focus outline to input field */
 vaadin-combo-box::part(input-field):focus {
-    outline: 2px solid #58a6ff; /* Blue focus ring */
+    outline: 2px solid #58a6ff;
 }
 
 vaadin-combo-box-overlay::part(overlay) {
-    background-color: #1b1e24; /* Match items background */
+    background-color: #1b1e24;
 }
 
-/* Style the dropdown items (the options) */
 vaadin-combo-box-overlay vaadin-combo-box-item {
     color: #c9d1d9;
 }
 
-/* Add hover effect for dropdown items */
 vaadin-combo-box-overlay vaadin-combo-box-item:hover {
-    background-color: #30363d; /* Darker hover background */
+    background-color: #30363d;
 }
 
-/* Style the dropdown background and text */
 vaadin-combo-box-overlay {
-    --vaadin-overlay-background: #21262d; /* Dropdown background color */
-    --vaadin-overlay-value-color: #c9d1d9; /* Dropdown text color */
+    --vaadin-overlay-background: #21262d;
+    --vaadin-overlay-value-color: #c9d1d9;
 }
 
-/* Ensure the dropdown arrow matches the buttons style */
 vaadin-combo-box::part(toggle-button) {
     color: #c9d1d9;
-    background-color: transparent; /* Match button background */
+    background-color: transparent;
     border: none;
 }
 
 .upload-button, .download-button {
-    width: 150px; /* Adjust the width as needed */
-    height: 40px;  /* Adjust the height as needed */
-    margin-left: auto; /* Make sure it aligns properly */
+    width: 148px;
+    height: 40px;
+    margin-left: auto;
 }
