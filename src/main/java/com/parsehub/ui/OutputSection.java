@@ -135,4 +135,3 @@ public class OutputSection extends VerticalLayout {
         return anchor;
     }
 }
-cd 
