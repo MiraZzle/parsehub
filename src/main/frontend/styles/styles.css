@@ -163,3 +163,9 @@ vaadin-combo-box::part(toggle-button) {
     background-color: transparent; /* Match button background */
     border: none;
 }
+
+.upload-button, .download-button {
+    width: 150px; /* Adjust the width as needed */
+    height: 40px;  /* Adjust the height as needed */
+    margin-left: auto; /* Make sure it aligns properly */
+}
