@@ -55,11 +55,6 @@ Run unit tests using:
 mvn test
 ```
 
-## File Upload/Download Features
-
-- The application supports uploading `.json`, `.xml`, `.yaml`, and `.txt` files to parse and display content.
-- Processed data can be downloaded as `.txt` files after conversion or formatting.
-
 ## API Routes
 
 [Here](/docs/api.md) is a list of the available API routes.
