@@ -45,7 +45,7 @@ cd parsehub
    mvn spring-boot:run
    ```
 
-3. Access the application at `http://localhost:8080/`.
+3. Access the application at `http://localhost:5000/`.
 
 ### Running Tests
 
@@ -66,7 +66,7 @@ mvn test
 
 ## Contributing
 
-Feel free to fork this repository and submit pull requests if you would like to contribute. Make sure to follow the project's code style and add relevant tests for new features or fixes.
+Feel free to fork this repository and submit pull requests if you would like to contribute.
 
 ## License
 
