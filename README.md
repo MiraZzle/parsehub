@@ -1,10 +1,10 @@
 # 🛠️ ParseHub Data Conversion & Validation Tool
 
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)   ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)   ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 
 ParseHub is a web-based application designed to handle various data formats (JSON, XML, YAML, CSV) and perform tasks like validation, formatting, conversion, and minification. It provides an API service for developers working with structured data.
 
----
+![ui showcase](/docs/assets/ui_showcase.png)
 
 ## 🚀 Features
 
@@ -13,16 +13,12 @@ ParseHub is a web-based application designed to handle various data formats (JSO
 - 🔄 **Conversion**: Convert between JSON, XML, YAML, and CSV formats.  
 - 💻 **Web UI**: A Vaadin-based user interface for manual data input, output, and file uploads.
 
----
-
 ## 🛠️ Technologies
 
 - **Backend**: Java Spring Boot  
 - **Frontend**: Vaadin Flow  
 - **Data Processing**: Jackson (for JSON, XML, CSV), SnakeYAML (for YAML)  
 - **Testing**: JUnit 5  
-
----
 
 ## 🏁 Getting Started
 
@@ -55,8 +51,6 @@ cd parsehub
 
 3. 🌐 Access the application at `http://localhost:5000/`.
 
----
-
 ### 🧪 Running Tests
 
 Run unit tests using:
@@ -65,13 +59,9 @@ Run unit tests using:
 mvn test
 ```
 
----
-
 ## 📜 API Routes
 
 [Here](/docs/api.md) is a list of the available API routes.
-
----
 
 ## 🤝 Contributing
 
